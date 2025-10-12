@@ -305,6 +305,81 @@ This setup is a good foundation to build upon (e.g., adding more rules, outputs,
 
 
 
+# 🚀 Terraform AWS EC2 Instances with Dynamic Instance Types
+
+This Terraform configuration creates **multiple EC2 instances**, each using a different instance type specified in a list. It demonstrates how to use a `list` variable and the `count` meta-argument to dynamically scale infrastructure.
+
+## 📁 Project Structure
+.
+├── main.tf # Contains the EC2 instance resource definition
+├── variables.tf # Defines the list variable for instance types
+├── terraform.tfvars (optional) # Override default values
+├── README.md # Project documentation
+
+## 🔧 What This Code Does
+
+- Declares a list of EC2 instance types using a variable.
+- Uses the `count` meta-argument to create multiple instances dynamically.
+- Assigns each instance a different type and a unique name tag based on its index.
+
+## 📦 Requirements
+
+- [Terraform](https://developer.hashicorp.com/terraform/downloads)
+- An AWS account with credentials configured (via AWS CLI or environment variables)
+- A valid AMI ID in your AWS region
+
+## 🧾 Variables
+
+### `instance_types`
+
+Defined in `variables.tf`:
+
+```hcl
+variable "instance_types" {
+  description = "List of instance types"
+  type        = list(string)
+  default     = ["t2.micro", "t3.small", "t3.medium"]
+}
+
+What it does:
+Creates one EC2 instance per item in the instance_types list.
+Uses count.index to:
+Set the instance_type from the list
+Set a unique name tag like Instance-0, Instance-1, etc.
+Usage
+1️⃣ Initialize Terraform
+terraform init
+
+2️⃣ Preview the Changes
+terraform plan
+
+3️⃣ Apply the Configuration
+terraform apply
+
+
+Type yes to confirm and create the resources.
+
+🧹 Clean Up
+
+To destroy all the EC2 instances created:
+
+terraform destroy
+
+📌 Notes
+
+Make sure to replace the AMI ID (ami-12345678) with a valid one from your AWS region.
+
+t2.micro is eligible for the AWS Free Tier.
+
+You can override the default instance types by creating a terraform.tfvars file:
+
+instance_types = ["t2.micro", "t3.medium", "t3.large"]
+
+
+
+
+
+
 
 
 
