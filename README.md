@@ -156,5 +156,75 @@ terraform init
 
 
 
+# 🚀 Terraform AWS EC2 with Dynamic Instance Type
+
+This Terraform configuration launches an AWS EC2 instance using a **map variable** to define different instance types for different environments (e.g., `dev` and `prod`).
+
+---
+
+## 🧱 What It Does
+
+- Defines a **map variable** (`instance_configs`) that maps environments to EC2 instance types.
+- Provisions an **EC2 instance** using the instance type from the map (currently using the `prod` value).
+- You can switch between environments by changing just one key (`"prod"` → `"dev"`).
+
+---
+
+## 📁 File Structure
+.
+├── main.tf # Terraform configuration for EC2 instance
+├── variables.tf # Variable definition (instance_configs)
+├── README.md # Project documentation-
+
+## 📥 Variable: `instance_configs`
+
+```hcl
+variable "instance_configs" {
+  type = map(string)
+  default = {
+    dev  = "t2.micro"
+    prod = "t3.large"
+  }
+}
+
+This defines instance types per environment:
+
+Environment	Instance Type
+dev	t2.micro
+prod	t3.large
+
+🖥️ Resource: aws_instance
+resource "aws_instance" "example" {
+  ami           = "ami-12345678"
+  instance_type = var.instance_configs["prod"]
+}
+Explanation:
+
+ami: Replace "ami-12345678" with a real, region-specific AMI ID.
+
+instance_type: Uses the instance type mapped to "prod" in the instance_configs map.
+
+To launch a smaller dev instance, change this line:
+instance_type = var.instance_configs["dev"]
+🛠️ Usage
+1️⃣ Prerequisites
+
+Terraform installed: Install Terraform
+AWS credentials configured via:
+aws configure, or
+
+Environment variables:
+export AWS_ACCESS_KEY_ID=your_key
+export AWS_SECRET_ACCESS_KEY=your_secret
+Notes
+
+The AMI ID (ami-12345678) is a placeholder. Use a valid AMI from your AWS region.
+t2.micro is usually free-tier eligible.
+Be cautious with "t3.large" — it may incur costs if you're outside the free tier.
+
+
+
+
+
 
 
