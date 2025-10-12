@@ -224,6 +224,86 @@ Be cautious with "t3.large" — it may incur costs if you're outside the free ti
 
 
 
+# 🔐 Terraform AWS Security Group with Dynamic Naming
+
+This Terraform project provisions an AWS Security Group with a dynamic name based on the specified **project name** and **environment**. It also allows inbound SSH (port 22) access from any IP.
+
+## 📁 Files
+.
+├── main.tf # Main Terraform configuration
+├── variables.tf # Input variable definitions
+├── README.md # Project documentation
+
+## 🚀 What This Does
+
+- Accepts `project_name` and `environment` as input variables.
+- Creates a Security Group named like `project-environment-sg`.
+- Opens **port 22 (SSH)** to the world (`0.0.0.0/0`).
+
+## 📦 Requirements
+- Terraform ≥ 1.0
+- AWS CLI or environment variables configured with valid credentials
+
+## 🔧 Variables
+
+### `project_name`
+- **Description**: Name of the project.
+- **Type**: `string`
+- **Required**: ✅
+
+### `environment`
+- **Description**: Deployment environment (e.g., `dev`, `prod`).
+- **Type**: `string`
+- **Required**: ✅
+
+## 🔐 Security Group Rule
+
+The security group allows **inbound SSH traffic**:
+
+| Type  | Protocol | Port | Source        |
+|-------|----------|------|---------------|
+| Inbound | TCP      | 22   | 0.0.0.0/0 (All IPs) |
+
+> ⚠️ **Warning**: Allowing SSH from all IPs is not recommended for production use. You should restrict this to your own IP address or network range.
+
+## 🚀 How to Use
+
+1️⃣ Initialize Terraform
+
+terraform init
+2️⃣ Plan the Deployment
+terraform plan -var="project_name=webapp" -var="environment=dev"
+
+3️⃣ Apply the Configuration
+terraform apply -var="project_name=webapp" -var="environment=dev"
+
+
+Type yes to confirm.
+
+🧹 Destroy Resources
+
+To tear down the created infrastructure:
+
+terraform destroy -var="project_name=webapp" -var="environment=dev"
+
+📝 Example
+
+If you run with:
+
+-var="project_name=webapp" -var="environment=prod"
+
+
+Then the security group name will be:
+
+webapp-prod-sg
+
+📌 Notes
+
+Be sure to replace the SSH rule (cidr_blocks = ["0.0.0.0/0"]) with your IP for better security.
+
+This setup is a good foundation to build upon (e.g., adding more rules, outputs, tagging, etc.)
+
+
 
 
 
